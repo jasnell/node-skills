@@ -1,0 +1,15 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": ["doc/api/test.md", "doc/api/cli.md", "doc/api/diagnostics_channel.md"],
+  "floor": "v24.0.0",
+  "stability": "mixed: 1.0 - Early development (tags, random order, global setup), 1 - Experimental (coverage include-all), 2 - Stable (rest)",
+  "verifiedOn": ["v28.0.0-pre (ab476eccd03)", "v26.13.0", "v24.19.0"],
+  "discrepancies": [
+    "test.md:492 / cli.md:1708 (Test tags, added v26.2.0, v24.19.0): on v24.19.0 the filter is a plain lowercased tag name (implementation: tags.has(filter)); boolean operators, 'not', and '*' wildcards select no tests, a malformed expression exits 0, and run({ testTagFilters }) runs no files. The full grammar works on v26.13.0 and main.",
+    "test.md:4722 (TestContext context.attempt, added: v25.0.0 only): present and correct (0, then 1 on rerun) on v24.19.0.",
+    "test.md:4181 (getTestContext): docs say a suite gets a SuiteContext and a setTimeout callback after completion gets undefined. Observed on main and v24.19.0: inside describe() it returns a TestContext instance (not the SuiteContext passed to the callback), and a timer scheduled by a test still returns that test's context after the test ended. In beforeEach/afterEach declared in a suite it returns the suite's context, not the test's.",
+    "test.md:1714 (run() YAML changes): the randomize/randomSeed and coverageIncludeAll options are documented but missing from the changes list. randomSeed was verified on v24.19.0+, coverageIncludeAll on v26.13.0+ (ignored on v24.19.0).",
+    "test.md:5116 (SuiteContext.passed): inside the suite's own after() hook it is still false although all children passed (main, v26.13.0, v24.19.0).",
+    "test.md:2487-2550, cli.md:3268, fs.md (mkstemp) and others use the placeholder version 'v27.0.0-alpha.0.0.0'; this skill writes v27.0.0."
+  ]
+}

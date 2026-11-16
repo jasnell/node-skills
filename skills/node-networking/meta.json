@@ -1,0 +1,28 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/net.md",
+    "doc/api/dgram.md",
+    "doc/api/tls.md",
+    "doc/api/http.md",
+    "doc/api/http2.md",
+    "doc/api/dns.md",
+    "doc/api/cli.md",
+    "doc/api/child_process.md",
+    "doc/api/worker_threads.md"
+  ],
+  "floor": "v24.0.0",
+  "stability": "mixed: 2 - Stable (net, dgram, tls, http, http2 additions); 1 - Experimental (node:net/promises, server[Symbol.asyncIterator]); 1.1 - Active development (built-in proxy support, --use-env-proxy, NODE_USE_ENV_PROXY); 1.2 - Release candidate (BlockList toJSON/fromJSON)",
+  "verifiedWith": ["v28.0.0-pre (ab476eccd03)", "v26.13.0", "v24.19.0"],
+  "discrepancies": [
+    "doc/api/http.md:3772-3776 and :4102-4106 say httpValidation 'strict' rejects any non-ASCII and that 'relaxed' allows a limited set of non-ASCII characters. Observed on v24.19.0 and main: strict accepts bytes 0x80-0xFF and rejects only control characters (400 / HPE_INVALID_HEADER_TOKEN), while relaxed accepts control characters such as \\x01. http.isValidHeaderValue('café') is true under the default strict mode. Verified by examples/http-server-options.mjs and http-validators.mjs.",
+    "doc/api/http2.md:3015 and :3253 give http1Options.keepAliveTimeout Default: 5000. On main the HTTP/1 fallback of createSecureServer({ allowHTTP1: true }) sends Keep-Alive: timeout=65, matching the v27 http.Server default (65000). On v24.19.0 it is 5 s.",
+    "doc/api/http2.md:3215 and :3416 give connectionWindowSize Default: 33554432 (the option was added in v26.11.0). On v26.13.0 a default session reports state.effectiveLocalWindowSize 65535; main reports 33554432. The default change has no changes: entry. createServer's connectionWindowSize (~:2976) lists no default.",
+    "doc/api/worker_threads.md (port.postMessage, ~:1230) and doc/api/net.md:976-1014 document transferring net.Server, net.Socket and net.BoundSocket through transferList without any version in a changes: entry. Observed: works on v26.13.0 and main, fails on v24.19.0 with DataCloneError 'Found invalid value in transferList'. Verified by examples/handle-transfer-worker.mjs (gated to v26.13.0+).",
+    "doc/api/http2.md: strictSingleValueFields is documented only for createServer/createSecureServer, but http2.connect({ strictSingleValueFields: false }) is honored for client requests (observed v24.19.0 and main).",
+    "doc/api/net.md:210: the blockList.clear() metadata comment is '<!--' without 'YAML', so tooling does not see its added: [v26.8.0, v24.21.0]. The method exists on v26.13.0 and main.",
+    "doc/api/net.md, tls.md, dns.md, http.md: several entries use the version string 'v27.0.0-alpha.0.0.0' (net/promises, server[Symbol.asyncIterator], tlsSocket.socket, dns.reverse hosts change, keepAliveTimeout 65 s). The skill treats these as v27.0.0.",
+    "node:net/promises also exports BlockList, SocketAddress, isIP, isIPv4, isIPv6 (observed on main); doc/api/net.md:2551 documents only connect and listen.",
+    "dns.reverse('127.0.0.1') on v24.19.0 and v26.13.0 (hosts-file path) returned [] rather than ['localhost'] even though /etc/hosts maps 127.0.0.1 to localhost; no PTR query was sent. Only the 'no query' part is asserted."
+  ]
+}

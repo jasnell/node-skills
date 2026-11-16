@@ -1,0 +1,14 @@
+{
+  "name": "node-skills",
+  "description": "Agent skills for Node.js features newer than most models' training data.",
+  "owner": {
+    "name": "James M Snell"
+  },
+  "plugins": [
+    {
+      "name": "node-skills",
+      "source": "./",
+      "description": "Skills covering Node.js features added since v24, plus removals and changed defaults."
+    }
+  ]
+}

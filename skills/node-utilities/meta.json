@@ -1,0 +1,20 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/util.md", "doc/api/buffer.md", "doc/api/fs.md", "doc/api/globals.md",
+    "doc/api/url.md", "doc/api/worker_threads.md", "doc/api/process.md", "doc/api/tty.md",
+    "doc/api/webstreams.md", "doc/api/stream.md", "doc/api/assert.md", "doc/api/cli.md",
+    "doc/api/errors.md", "doc/api/diagnostics_channel.md"
+  ],
+  "floor": "v24.0.0",
+  "stability": "mixed: 1 - Experimental (URLPattern, Web Locks, Web Worker, fs.mkstemp, fs.Utf8Stream, ReadableStreamTee, addUncaughtExceptionCaptureCallback), 2 - Stable (rest)",
+  "verifiedOn": ["v28.0.0-pre (ab476eccd03)", "v26.13.0", "v24.19.0"],
+  "discrepancies": [
+    "fs.md:1700 and fs.md:6666 (mkdtempDisposable / mkdtempDisposableSync): docs say a Buffer prefix (or encoding 'buffer') yields a Buffer `path`. On main both throw ERR_INVALID_ARG_TYPE from path.resolve after the directory was created (leaking it). On v24.19.0 and v26.13.0 a Buffer prefix returns a string path; encoding 'buffer' throws there too.",
+    "fs.md:2175 (fsPromises.stat throwIfNoEntry, changes: v25.7.0 only) and fs.stat: works on v24.19.0 (resolves/calls back with undefined).",
+    "worker_threads.md:807 (locks.request): 'Returns: Resolves once the lock has been released' — it resolves with the callback's return value (spec behavior).",
+    "globals.md:1489 Worker says 'Stability: 1 - Experimental' while cli.md:2381 --no-experimental-web-worker says '1.1 - Active Development'.",
+    "fs.md:1737, fs.md:4157, fs.md:6701 (mkstemp*) use the placeholder version 'v27.0.0-alpha.0.0.0'; this skill writes v27.0.0. globals.md:1489 Worker default-on change is REPLACEME (main only).",
+    "Not documented: fs.Stats *Instant getters are lazy (absent from Object.keys until first read); an empty FORCE_COLOR= forces styleText colors; a pending locks.request() does not keep a worker thread alive; a relative Web Worker URL resolves against process.cwd()."
+  ]
+}

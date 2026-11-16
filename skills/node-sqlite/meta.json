@@ -1,0 +1,22 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/sqlite.md",
+    "doc/api/deprecations.md",
+    "doc/api/diagnostics_channel.md"
+  ],
+  "floor": "v24.9.0",
+  "stability": "1.2 - Release candidate (module); 1 - Experimental ('sqlite.db.query' channel)",
+  "verifiedWith": [
+    "v28.0.0-pre (main @ ab476eccd03)",
+    "v26.13.0",
+    "v24.22.3",
+    "v24.19.0"
+  ],
+  "discrepancies": [
+    "doc/api/sqlite.md:169-172 lists `Class: Database` as `added: v22.5.0` with no changes entry for the rename. The `Database`/`Statement` export names only exist from v26.11.0 (CHANGELOG_V26 #65988; DEP0210/DEP0211 at deprecations.md:4822-4848). v24.19.0 exports only DatabaseSync/StatementSync, and `import { Database }` is a SyntaxError there.",
+    "doc/api/sqlite.md:1219-1266 (Binding parameters) and the type table at :102-108 describe current behavior only. On v24.19.0 (before the v24.21.0 changes) an ArrayBuffer parameter silently binds NULL instead of throwing, and an anonymous `undefined` throws ERR_INVALID_ARG_TYPE (named `undefined` already binds NULL).",
+    "doc/api/sqlite.md:863-865 says not to put `?` placeholders in tagged SQL, but does not say that current versions throw ERR_INVALID_ARG_VALUE (observed on v24.22.3, v26.13.0 and main). v24.19.0 silently binds NULL for the extra placeholder.",
+    "doc/api/sqlite.md:938-941 (createModule `rows`) says hidden-column values are passed as arguments, but omitted arguments arrive as `null`, not `undefined`, so JS default parameters do not apply (observed on v26.13.0 and main)."
+  ]
+}

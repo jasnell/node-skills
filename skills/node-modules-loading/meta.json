@@ -1,0 +1,74 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/typescript.md",
+    "doc/api/module.md",
+    "doc/api/modules.md",
+    "doc/api/esm.md",
+    "doc/api/packages.md",
+    "doc/api/cli.md",
+    "doc/api/errors.md",
+    "doc/api/globals.md",
+    "doc/api/deprecations.md"
+  ],
+  "floor": "v24.0.0",
+  "stability": "2 - Stable (type stripping, require(esm), compile cache, --config-file); 1.2 - Release candidate (module.registerHooks, Wasm source phase); 1 - Experimental (package maps, --experimental-strip-private-modules, \"worker\" condition); 1.0 - Early development (text imports, import.meta.main)",
+  "verifiedWith": [
+    "v28.0.0-pre (ab476eccd03)",
+    "v26.13.0",
+    "v24.19.0"
+  ],
+  "discrepancies": [
+    {
+      "doc": "doc/api/module.md:1000-1006",
+      "claim": "load hook example returns { source: source.replace(/foo/g, 'bar'), ...result } to modify the loaded source.",
+      "behavior": "The trailing spread overwrites `source` with the original, so the replacement is silently lost (verified on v24.19.0, v26.13.0, main). Correct form: { ...result, source: ... }.",
+      "example": "examples/register-hooks.mjs"
+    },
+    {
+      "doc": "doc/api/module.md:202 (registerHooks Returns)",
+      "claim": "The returned object has [Symbol.dispose] (no version history).",
+      "behavior": "Present on v26.13.0 and main; absent on v24.19.0 (deregister() exists on all three)."
+    },
+    {
+      "doc": "doc/api/packages.md:1045-1047 and 1108-1158 ('Multiple packages for the same URL')",
+      "claim": "Multiple package-map entries may share the same url.",
+      "behavior": "v26.13.0 and main reject such a map with ERR_PACKAGE_MAP_INVALID ('packages \"a\" and \"b\" have the same url'), matching errors.md:2642 instead.",
+      "example": "examples/package-map.mjs"
+    },
+    {
+      "doc": "doc/api/module.md:546-550",
+      "claim": "The compile cache directory can be obtained either from the `directory` field returned by enableCompileCache() or with module.getCompileCacheDir() (implies the same value).",
+      "behavior": "getCompileCacheDir() returns a per-version subdirectory of `directory`, e.g. <dir>/v28.0.0-pre-x64-<hash>[-<uid>].",
+      "example": "examples/compile-cache.mjs"
+    },
+    {
+      "doc": "doc/api/module.md:365-370 (Portability of the compile cache)",
+      "claim": "A portable cache is not split by uid (no version history).",
+      "behavior": "True on v26.13.0 and main; on v24.19.0 the portable cache subdirectory still carries the -<uid> suffix. The change (nodejs/node adad4d650d0) has no YAML changes entry."
+    },
+    {
+      "doc": "doc/api/module.md:256-262 (stripTypeScriptTypes sourceUrl example)",
+      "claim": "Prints: const a         = 1\\n\\n//# sourceURL=source.ts;",
+      "behavior": "Actual output is 'const a         = 1;\\n\\n//# sourceURL=source.ts' (semicolon stays on the statement, none after the comment).",
+      "example": "examples/ts-removed-options.mjs"
+    },
+    {
+      "doc": "doc/api/packages.md:713-717 (\"worker\" condition)",
+      "claim": "Documented without version.",
+      "behavior": "Matches inside a Web Worker on main only; on v26.13.0 with --experimental-web-worker the global Worker exists but the condition does not match.",
+      "example": "examples/worker-condition.mjs"
+    },
+    {
+      "doc": "doc/api/cli.md:883-918 (--config-file nodeVersion/configs)",
+      "claim": "Documented without version history.",
+      "behavior": "Works on v26.13.0 and main; on v24.19.0 nodeVersion is accepted but a configs array silently applies nothing."
+    },
+    {
+      "doc": "doc/api/cli.md:970-978 (--config-file priority)",
+      "claim": "NODE_OPTIONS and CLI options take priority over the configuration file; values in the file will not override values in the environment variables (implies per-key precedence).",
+      "behavior": "If the NODE_OPTIONS environment variable is present at all (even empty, or containing an unrelated flag such as --no-deprecation), all nodeOptions from the config file are ignored. Verified on v24.19.0 (--experimental-config-file), v26.13.0 and main.",
+      "example": "examples/config-file.mjs"
+    }
+  ]
+}

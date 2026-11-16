@@ -1,0 +1,56 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/deprecations.md",
+    "doc/api/http.md",
+    "doc/api/buffer.md",
+    "doc/api/stream.md",
+    "doc/api/globals.md",
+    "doc/api/cli.md",
+    "doc/api/dns.md",
+    "doc/api/sqlite.md",
+    "doc/api/repl.md",
+    "doc/api/process.md",
+    "doc/api/fs.md",
+    "doc/api/typescript.md",
+    "doc/changelogs/CHANGELOG_V27.md"
+  ],
+  "floor": "v24.0.0",
+  "stability": "n/a (removals and defaults); 1.2 - Release candidate (Web Storage / localStorage)",
+  "verifiedWith": ["v28.0.0-pre (ab476eccd03)", "v26.13.0", "v24.19.0"],
+  "discrepancies": [
+    {
+      "doc": "doc/api/globals.md:667-672",
+      "claim": "Since v26.0.0, accessing localStorage without --localstorage-file throws a DOMException.",
+      "behavior": "On v26.13.0 and main, globalThis.localStorage evaluates to undefined (no throw) and emits an ExperimentalWarning: 'localStorage is not available because --localstorage-file was not provided.'",
+      "example": "examples/defaults-v26.mjs"
+    },
+    {
+      "doc": "doc/api/fs.md:6651-6657 (also fs.md:1666-1670 and fs.mkdtemp at fs.md:4058)",
+      "claim": "encoding defaults to 'buffer' when prefix is a Buffer; otherwise the path is returned as a string in the specified encoding.",
+      "behavior": "On main, a Buffer prefix returns a Buffer even with an explicit { encoding: 'utf8' } or 'utf8' (mkdtempSync, mkdtemp callback, fsPromises.mkdtemp).",
+      "example": "examples/defaults-v27.mjs"
+    },
+    {
+      "doc": "doc/api/repl.md:214-217",
+      "claim": "The --experimental-repl-await flag was removed.",
+      "behavior": "On main, --experimental-repl-await is still accepted silently (no-op, exit 0) and still listed in cli.md:4320 (NODE_OPTIONS allow-list); only --no-experimental-repl-await is rejected ('invalid negation because it is not a boolean option').",
+      "example": "examples/defaults-v27.mjs"
+    },
+    {
+      "doc": "doc/api/sqlite.md:169-172",
+      "claim": "Class Database: added v22.5.0.",
+      "behavior": "require('node:sqlite').Database is undefined on v24.19.0 (only DatabaseSync exists). It is present on v26.13.0 and main. The rename landed with DEP0210 (v26.11.0), but the class YAML still gives only the original v22.5.0 date."
+    },
+    {
+      "doc": "SURVEY.md section 5 (not doc/api)",
+      "claim": "Documentation-only deprecation of the .aborted/'aborted' pattern in node:http.",
+      "behavior": "deprecations.md DEP0207 is about node:http2. The node:http equivalent is the older DEP0156."
+    },
+    {
+      "doc": "doc/api/*.md (87 occurrences, e.g. deprecations.md:777)",
+      "claim": "version: v27.0.0-alpha.0.0.0",
+      "behavior": "Not an error, but note: this is an alpha release (CHANGELOG_V27.md lists only 27.0.0-alpha.0.0.0 and 27.0.0-alpha.0.1.0). No stable v27 exists, so these rows are documented as 'v27 alpha'."
+    }
+  ]
+}

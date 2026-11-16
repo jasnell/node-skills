@@ -1,0 +1,58 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '17 6 * * 1' # weekly: catch releases that break examples, and upstream doc drift
+
+permissions:
+  contents: read
+
+jobs:
+  structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node --test tools/
+      - run: node tools/skill-budget.mjs --check
+
+  examples:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [24, 26, latest, nightly]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        if: matrix.node != 'nightly'
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Install nightly
+        if: matrix.node == 'nightly'
+        run: |
+          v=$(curl -fsSL https://nodejs.org/download/nightly/index.json | jq -r '.[0].version')
+          curl -fsSL "https://nodejs.org/download/nightly/$v/node-$v-linux-x64.tar.xz" | tar -xJ -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/node-$v-linux-x64/bin" >> "$GITHUB_PATH"
+      - run: node --version
+      - run: node tools/run-examples.mjs
+
+  drift:
+    runs-on: ubuntu-latest
+    continue-on-error: true # informational: a report, not a gate
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: nodejs/node
+          path: .node
+          fetch-depth: 0
+          sparse-checkout: doc
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node tools/check-drift.mjs --node-dir .node

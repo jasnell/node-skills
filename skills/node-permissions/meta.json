@@ -1,0 +1,17 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": ["doc/api/permissions.md", "doc/api/cli.md", "doc/api/process.md", "doc/api/errors.md"],
+  "floor": "v24.0.0",
+  "stability": "2 - Stable (--permission, --allow-fs-*); 1.1 - Active development (other --allow-* flags, process.permission.drop); 1.0 - Early development (--allow-inspector)",
+  "verifiedOn": ["v24.19.0", "v26.13.0", "v28.0.0-pre (ab476eccd03)"],
+  "discrepancies": [
+    "cli.md:401-431 documents --allow-net as a boolean flag; behavior: any value (--allow-net=192.0.2.1, --allow-net=false) is accepted silently and grants all network access (v26.13.0, main). There is no per-host grant.",
+    "permissions.md:208 and cli.md:2640 say --permission takes precedence over --permission-audit; on v26.13.0 audit mode wins (nothing is denied). Main behaves as documented.",
+    "permissions.md:172 describes node:permission-model:* channel messages for audit mode only; they are also published in enforce mode just before ERR_ACCESS_DENIED is thrown (v26.13.0, main).",
+    "permissions.md:419-420 says the config-file permission namespace enables --permission automatically; v24.19.0 (--experimental-config-file) instead throws ERR_MISSING_OPTION '--permission is required'. No YAML changes: entry records when auto-enable landed (commit 1758b748297, first tagged v26.0.0).",
+    "cli.md:197 (--allow-env) has malformed 'added: v27.0.0-alpha.0.0.0' (also cli.md:1651, 2374, 3271 for other entries); treated as v27.0.0.",
+    "process.md:3201 lists scopes but does not say unknown scopes are accepted: has('bogus') returns false and drop('bogus') is a silent no-op. On v24.19.0 has('net') returns false although the network is not gated.",
+    "process.md:3257 / permissions.md:132 say a file inside a granted directory 'cannot' be dropped; behavior: drop() returns without error and has() stays true (silent no-op).",
+    "ERR_ACCESS_DENIED.resource for fs is the path exactly as the caller passed it (relative paths stay relative); docs only show absolute examples."
+  ]
+}

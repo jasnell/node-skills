@@ -1,0 +1,23 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/diagnostics_channel.md",
+    "doc/api/async_context.md",
+    "doc/api/v8.md",
+    "doc/api/worker_threads.md",
+    "doc/api/debugger.md",
+    "doc/api/inspector.md",
+    "doc/api/cli.md",
+    "doc/api/test.md"
+  ],
+  "floor": "v24.0.0",
+  "stability": "mixed: 2 - Stable (TracingChannel, AsyncLocalStorage options, worker profiling); 1 - Experimental (boundedChannel, withStoreScope, withScope, startHeapProfile, setHeapProfileNearHeapLimit, probe mode, built-in channels); 1.1 - Active development (inspector DOMStorage)",
+  "verifiedWith": ["v28.0.0-pre (ab476eccd03)", "v26.13.0", "v24.19.0"],
+  "discrepancies": [
+    "doc/api/v8.md:383 says v8.queryObjects() is no longer experimental (v25.4.0, v24.13.1), but every tested binary (v24.19.0, v26.13.0, v28.0.0-pre) still emits 'ExperimentalWarning: v8.queryObjects() is an experimental feature' (lib/internal/heap_utils.js:82). Verified by examples/query-objects.mjs.",
+    "doc/api/diagnostics_channel.md:731 and :1377 document classes RunStoresScope and BoundedChannelScope, but neither is exported from node:diagnostics_channel (BoundedChannel is). Only instances are reachable.",
+    "doc/api/diagnostics_channel.md:1427 has a broken reference link: \\[`boundedChannel.withScope([context])`]\\[] renders literally.",
+    "doc/api/test.md:4239 documents the 'node.test' tracing channel for tests and suites. The runner also publishes start/end with name '<root>' (type 'test', nesting 0) after the tests have run. This is undocumented. Verified by examples/channel-test-runner.mjs.",
+    "doc/api/diagnostics_channel.md (boundedChannel.run, ~line 1293) does not say so, but run() sets neither ctx.result nor ctx.error, unlike TracingChannel.traceSync. Behavior is documented in the skill, not a contradiction."
+  ]
+}

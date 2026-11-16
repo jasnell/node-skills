@@ -1,0 +1,13 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": ["doc/api/cli.md", "doc/api/child_process.md", "doc/api/process.md", "doc/api/report.md", "doc/api/inspector.md"],
+  "floor": "v26.11.0",
+  "stability": "1.1 - Active development (--process-timeout, --report-on-process-timeout); 2 - Stable (subprocess.timedOut)",
+  "verifiedWith": ["v28.0.0-pre (main ab476eccd03)", "v26.13.0", "v24.19.0 (flag rejected: bad option)"],
+  "discrepancies": [
+    "child_process.md:2323 subprocess.timedOut has `added: v27.0.0-alpha.0.1.0`, a non-standard release string (from the 27.0.0 alpha release commit). Absent (undefined) in v26.13.0; present on main. Example header uses v27.0.0.",
+    "child_process.md:236 error.timedOut for exec()/execFile() callbacks has no YAML history; it is undefined in v26.13.0 and true on main.",
+    "cli.md:2747-2749 says a main thread that does not respond within two seconds makes Node.js 'exit immediately without printing the stack trace and resources'; behavior: it exits with 124 about 2 s after the timeout and prints 'The main thread did not respond within 2000ms. It is likely blocked in a synchronous native operation ...'. Consistent in substance; wording 'immediately' means after the 2 s grace.",
+    "cli.md:2764-2770 (node --test): not a contradiction, but the runner's own timeout always starts first, so it fires before any test-file child's and identifies the hung file only as 'ProcessWrap (pid N)'; the child's own summary is lost."
+  ]
+}

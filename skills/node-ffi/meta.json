@@ -1,0 +1,28 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/ffi.md",
+    "doc/api/cli.md",
+    "doc/api/permissions.md",
+    "doc/api/process.md"
+  ],
+  "floor": "v26.1.0",
+  "stability": "1 - Experimental (--allow-ffi: 1.1)",
+  "verifiedOn": [
+    "v28.0.0-pre (ab476eccd03)",
+    "v26.13.0",
+    "v24.19.0 (absent)"
+  ],
+  "discrepancies": [
+    {
+      "doc": "doc/api/ffi.md:443",
+      "claim": "library.toFunction(pointer, signature) is documented with no YAML added: block, as if it were part of the v26.1.0 class.",
+      "behavior": "lib.toFunction is undefined in v26.13.0. It exists on v28.0.0-pre (main)."
+    },
+    {
+      "doc": "doc/api/ffi.md:484 / doc/api/cli.md:247",
+      "claim": "FFI APIs are restricted without --allow-ffi; FFI permission is required when creating a toFunction wrapper even after it is revoked.",
+      "behavior": "After process.permission.drop('ffi'), an already-open library still allows getFunction(), registerCallback() and calls. Only new libraries, toFunction and the memory helpers throw ERR_ACCESS_DENIED. The docs do not say what drop does to getFunction or registerCallback. Seen on v26.13.0 and main."
+    }
+  ]
+}

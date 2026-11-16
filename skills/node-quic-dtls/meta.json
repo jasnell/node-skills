@@ -1,0 +1,42 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": ["doc/api/quic.md", "doc/api/dtls.md", "doc/api/cli.md", "doc/api/crypto.md"],
+  "floor": "v24.16.0 (QUIC flag; custom build only), v26.9.0 (DTLS)",
+  "stability": "node:quic 1.0 - Early development; node:dtls 1.1 - Active development",
+  "verifiedOn": [
+    "v28.0.0-pre (ab476eccd03) built with ./configure --ninja -C --experimental-quic --experimental-dtls (scratch copy; examples exchange data)",
+    "v28.0.0-pre default build, v26.13.0, v24.19.0: modules absent (node_use_quic/node_use_dtls false); examples skip"
+  ],
+  "discrepancies": [
+    {
+      "doc": "doc/api/quic.md:13-14",
+      "claim": "To access node:quic, start Node.js with --experimental-quic.",
+      "behavior": "You also need a build configured with --experimental-quic. Official v24.19.0, v26.13.0 and a default main build accept the flag but throw ERR_UNKNOWN_BUILTIN_MODULE. dtls.md:18-20 documents the build requirement; quic.md does not."
+    },
+    {
+      "doc": "doc/api/quic.md:1017-1021",
+      "claim": "session.opened: validationErrorReason is '' and validationErrorCode is 0 when validation succeeded; validationErrorCode is a {number}.",
+      "behavior": "On success both keys are absent (undefined). With verifyPeer 'manual' and a failure, validationErrorCode is a string such as 'DEPTH_ZERO_SELF_SIGNED_CERT'."
+    },
+    {
+      "doc": "doc/api/quic.md:3540-3560 (sessionOptions.sni) and 3151 (ca)",
+      "claim": "certs accept ArrayBuffer|ArrayBufferView. The encoding is not stated.",
+      "behavior": "PEM bytes work. DER bytes (X509Certificate.raw) fail at listen() with ERR_INVALID_STATE 'Failed to create TLS context: Invalid certificate'. PEM strings throw ERR_INVALID_ARG_TYPE."
+    },
+    {
+      "doc": "doc/api/quic.md:9 vs doc/api/cli.md:1598",
+      "claim": "quic.md says Stability 1.0 (Early development); cli.md --experimental-quic says 1.1 (Active development).",
+      "behavior": "Docs inconsistency only."
+    },
+    {
+      "doc": "doc/api/dtls.md:9 vs doc/api/cli.md:1477",
+      "claim": "dtls.md says Stability 1.1; cli.md --experimental-dtls says 1 - Experimental.",
+      "behavior": "Docs inconsistency only."
+    },
+    {
+      "doc": "doc/api/dtls.md:65-135 vs 614-625",
+      "claim": "The dtls.listen() option list omits ticketKeys, but the Ticket keys section passes ticketKeys to listen().",
+      "behavior": "listen() accepts ticketKeys and requires exactly 80 bytes (ERR_INVALID_ARG_VALUE otherwise)."
+    }
+  ]
+}

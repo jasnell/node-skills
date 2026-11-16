@@ -1,0 +1,15 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": ["doc/api/bench.md", "doc/api/cli.md"],
+  "floor": "v26.9.0",
+  "stability": "1.0 - Early Development (module); 1 - Experimental (CLI flags)",
+  "verifiedWith": ["v28.0.0-pre (main ab476eccd03)", "v26.13.0"],
+  "notes": "doNotOptimize and --bench-gc are 'added: REPLACEME' (unreleased) on main. Examples feature-detect them instead of using a made-up version.",
+  "discrepancies": [
+    "bench.md:765-800 context.end([operations]) and context.record({operations}) document operations as optional (Default: 1) with no changes: entry; v26.13.0 requires it (ERR_INVALID_ARG_TYPE 'The \"operations\" argument must be of type number').",
+    "bench.md:390 bench() `gc` option has no changes: entry; v26.13.0 silently ignores it (plan has no gc field, no --expose-gc error), main honors it.",
+    "bench.md:292-310 (reporters environment snapshot) has no version marker; v26.13.0 json reporter emits no 'bench:environment' record and spec prints no environment header; main does.",
+    "Observed bug (main ab476eccd03): `--bench-reporter=./custom.mjs --bench-reporter=json --bench-reporter-destination=stdout --bench-reporter-destination=out.ndjson` leaves out.ndjson empty; with json listed first both reporters write. Not mentioned in cli.md:618-632.",
+    "Undocumented: node:bench exports top-level `skip` and `only` (identical to bench.skip/bench.only)."
+  ]
+}

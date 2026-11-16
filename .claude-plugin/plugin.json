@@ -1,0 +1,15 @@
+{
+  "name": "node-skills",
+  "displayName": "Node.js modern features",
+  "version": "0.1.0",
+  "description": "Skills covering Node.js features added since v24 (bench, Histogram statistics, process timeout, ZIP, SQLite, test runner, crypto, permissions, VFS, FFI, QUIC, and more) plus removals and changed defaults.",
+  "author": {
+    "name": "James M Snell"
+  },
+  "license": "MIT",
+  "keywords": [
+    "nodejs",
+    "node",
+    "skills"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/crypto.md",
+    "doc/api/webcrypto.md",
+    "doc/api/deprecations.md",
+    "doc/api/cli.md",
+    "doc/api/diagnostics_channel.md"
+  ],
+  "floor": "v24.7.0",
+  "stability": "2 - Stable (node:crypto argon2, ML-KEM/ML-DSA/SLH-DSA, randomUUIDv7, parsePKCS12, SIV); 1.2 - Release candidate (createMac/getMacs, generateX509Certificate[Sync]); 1.1 - Active development (WebCrypto modern algorithms, SubtleCrypto.supports, OpenSSL STORE keys, --allow-openssl-store); 1 - Experimental (crypto.fips.indicator channel)",
+  "openssl": {
+    "v24.19.0": "3.5.7",
+    "v26.13.0": "3.5.9",
+    "v28.0.0-pre (main)": "4.1.0",
+    "notes": "ML-KEM/ML-DSA/SLH-DSA/hybrid KEM need OpenSSL 3.5+; Argon2, DHKEM, GCM-SIV need 3.2+; node:crypto cSHAKE (cshake-128/256) needs 4.0+; FIPS indicator events and --force-fips=strict need 3.4+"
+  },
+  "discrepancies": [
+    "webcrypto.md:1000-1013 (subtle.digest) lists 'cSHAKE128', 'KT128', 'TurboSHAKE128' etc. as valid string algorithms, but the string form rejects with TypeError on all tested binaries because outputLength is required; SubtleCrypto.supports('digest', 'cSHAKE128') is false.",
+    "webcrypto.md:2449 documents the KmacParams member as `kmacParams.algorithm`; behavior requires `name` ({ algorithm: 'KMAC128' } rejects with TypeError \"'name' is required\"). outputLength is also required (not stated as required at webcrypto.md:2457).",
+    "webcrypto.md:1898-1916 (cShakeParams.customization/functionName) says non-empty values require OpenSSL 4.0+; v24.19.0 linked to OpenSSL 3.5.7 accepts them and produces the same digest as main (OpenSSL 4.1), while v26.13.0 (OpenSSL 3.5.9) rejects them with NotSupportedError. v24.19.0 also accepted cSHAKE outputLength 7 (not a multiple of 8, contrary to webcrypto.md:1864-1873); main and v26.13.0 reject it.",
+    "deprecations.md DEP0203/DEP0204 list v24.15.0 as documentation-only, but v24.19.0 emits runtime DeprecationWarnings DEP0203 (createHmac with a CryptoKey) and DEP0204 (KeyObject.from with a non-extractable CryptoKey).",
+    "crypto.md:5316, 5559, 3170, 3311, 3444, 3489, 3606, 3672 use the malformed version `added: v27.0.0-alpha.0.1.0` (generateX509Certificate[Sync], x509.extensions/issuerName/subjectName/tbs/signature/version); treated as v27.0.0. Other entries use `v27.0.0-alpha.0.0.0` (e.g. DEP0183/0198/0203/0204, createPublicKey changes).",
+    "crypto.md:4512-4514 (createPrivateKey) says passing a CryptoKey is 'no longer supported' as of v26.7.0 while createPublicKey (crypto.md:4594) and the other APIs say v27.0.0; in practice createPrivateKey(cryptoKey)/createPublicKey(cryptoKey) already threw ERR_INVALID_ARG_TYPE / ERR_CRYPTO_INVALID_KEY_OBJECT_TYPE on v24.19.0 and v26.13.0.",
+    "DEP0198 EOL (deprecations.md, crypto.md:5817 hash changes) does not name the error; on main it is OpenSSL's ERR_OSSL_EVP_NOT_XOF_OR_INVALID_LENGTH rather than a Node ERR_* code."
+  ],
+  "unverified": [
+    "crypto.fips.indicator message delivery and --force-fips=strict (no FIPS provider available); only flag acceptance and subscription were exercised.",
+    "Provider ciphers (SM4-*, CBC-CTS ctsMode, xtsStandard), GMAC/BLAKE2/SipHash/Poly1305 via createMac, CSR-based generateX509Certificate, pkcs11: STORE URIs, URL keys in sign/decapsulate/diffieHellman."
+  ]
+}

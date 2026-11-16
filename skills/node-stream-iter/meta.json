@@ -1,0 +1,31 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": [
+    "doc/api/stream_iter.md",
+    "doc/api/fs.md",
+    "doc/api/stream.md",
+    "doc/api/zlib.md",
+    "doc/api/cli.md",
+    "doc/changelogs/CHANGELOG_V26.md"
+  ],
+  "floor": "v24.20.0",
+  "stability": "1 - Experimental",
+  "verifiedWith": [
+    "v28.0.0-pre (main @ ab476eccd03)",
+    "v26.13.0",
+    "v24.22.3",
+    "v24.19.0 (flag rejected: bad option)"
+  ],
+  "discrepancies": [
+    "doc/api/zlib.md:3211-3215 (Iterable Compression, node:zlib/iter) and each compress*/decompress* entry list only `added: v25.9.0`, but node:zlib/iter shipped in the v24.20.0 backport (commit 28dc85d8d2, Backport-PR #64675). Verified on v24.22.3, where examples/compression.mjs passes.",
+    "doc/api/stream.md:2030-2032 says `Readable` implements Symbol.for('Stream.toAsyncStreamable') only when --experimental-stream-iter is enabled. On v24.22.3, v26.13.0 and main the method is present without the flag.",
+    "doc/api/stream_iter.md:296-302 says fire-and-forget writes in 'strict' mode 'throw'. The observed behavior is that write() returns a promise that rejects with RangeError [ERR_INVALID_STATE] 'Backpressure violation: too many pending writes'. Nothing throws synchronously, so an unhandled rejection crashes the process.",
+    "doc/api/stream_iter.md:859, :929, :1419, :1537, :1665 say `budget` must be a positive integer, with no `changes:` entry. On v24.22.3 (and, per CHANGELOG_V26, before v26.12.0 / #66483), any budget below 16384 throws ERR_OUT_OF_RANGE for push, duplex, broadcast, share and shareSync.",
+    "doc/api/stream_iter.md:770-772 says pull() with an already-aborted signal still returns an iterable. On v24.22.3, pull() throws signal.reason synchronously. Changed in v26.12.0 ('align pull() abort handling with the spec', #66483), with no changes: entry.",
+    "doc/api/stream_iter.md:725-749 (pipeToSync failOnIncompleteClose, plus ERR_INVALID_STATE when endSync() returns -1) has no `added`/`changes` entry for the option. On v24.22.3 the option is ignored, and pipeToSync returns the byte count instead of throwing.",
+    "doc/api/stream_iter.md:1671-1677 says shareSync rejects 'unbounded'/'drop-newest' with ERR_INVALID_ARG_VALUE. v24.22.3 accepts both (changed in v26.12.0, #66483, with no changes: entry)."
+  ],
+  "unverified": [
+    "v26.1.0-v26.11.x: I ran no binary. The v24-style behavior there (the budget minimum and the pull() abort behavior, changed in v26.12.0 by #66483) is inferred from CHANGELOG_V26."
+  ]
+}

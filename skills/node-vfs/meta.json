@@ -1,0 +1,29 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": ["doc/api/vfs.md", "doc/api/single-executable-applications.md", "doc/api/cli.md", "doc/api/permissions.md", "doc/api/zlib.md"],
+  "floor": "v26.4.0",
+  "stability": "1 - Experimental (node:vfs); 1.1 (--build-sea, --allow-fs-vfs); 1.0 (SEA useVfs)",
+  "verifiedOn": ["v28.0.0-pre (ab476eccd03)", "v26.13.0 (--experimental-vfs)", "v24.19.0 (absent)"],
+  "discrepancies": [
+    {
+      "doc": "doc/api/vfs.md:63",
+      "claim": "All paths are POSIX-style and absolute (starting with /) for the instance methods.",
+      "behavior": "While the instance is mounted, its own methods resolve paths under the mount point: v.readFileSync('/a') throws ENOENT, v.readFileSync(`${mountPoint}/a`) works. Unprefixed paths work again after unmount(). Undocumented. Seen on v26.13.0 and v28.0.0-pre."
+    },
+    {
+      "doc": "doc/api/vfs.md:716",
+      "claim": "RealFSProvider: symbolic links resolving outside the root are rejected.",
+      "behavior": "readFileSync('/link') follows a symlink (absolute or relative target) that points outside the root, directly and through the mount. Only realpathSync rejects it with EACCES. Seen on v26.13.0 and v28.0.0-pre."
+    },
+    {
+      "doc": "doc/api/vfs.md:540 vs doc/api/single-executable-applications.md:366",
+      "claim": "vfs.md says .node addons in a mounted VFS can be require()d. The SEA doc says addons cannot be loaded directly from the VFS.",
+      "behavior": "Not verified for addons. ffi.dlopen() from a mounted VFS does work (v26.13.0, main)."
+    },
+    {
+      "doc": "doc/api/single-executable-applications.md:229",
+      "claim": "--build-sea rejects --vfs-load in execArgv.",
+      "behavior": "True on main. v26.13.0 builds such a config without error. The page has no YAML changes entry for this."
+    }
+  ]
+}

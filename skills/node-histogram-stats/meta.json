@@ -1,0 +1,17 @@
+{
+  "nodejsCommit": "ab476eccd03",
+  "sources": ["doc/api/perf_hooks.md", "doc/api/worker_threads.md"],
+  "floor": "v24.12.0",
+  "stability": "2 - Stable",
+  "verifiedWith": ["v28.0.0-pre (main ab476eccd03)", "v26.13.0", "v24.19.0"],
+  "discrepancies": [
+    "perf_hooks.md:2978 recordCorrected says it backfills values 'between the previously recorded value and val'. Behavior (main, v26.13.0): every call records val, val-i, val-2i, ... down to i, independent of earlier records (recordCorrected(1000,100) on an empty histogram records 10 values; 950 then 1000 records 19).",
+    "perf_hooks.md:2118 burnRate 'Requires the histogram to have been created with both halfLife and threshold'. Behavior: without them it returns 0 and does not throw.",
+    "perf_hooks.md:1758-1768 createHistogram halfLife/threshold options have no changes: entry; version of introduction undocumented.",
+    "perf_hooks.md:2367 ewmaMean lists added: v26.8.0 only, while ewmaStddev/ewmaErrorRate/burnRate list v26.8.0, v24.21.0. Unverified on v24.21+ (no binary available); treated as not on v24.",
+    "perf_hooks.md:2309 export() lists added: v26.9.0 only, while importHistogram (1829) lists v26.9.0, v24.22.0. Unverified on v24.22 (no binary available).",
+    "perf_hooks.md:1940 monitorEventLoopDelay lowest/highest/figures (v26.11.0): on older versions (verified v24.19.0) they are silently ignored rather than rejected (figures: 9 accepted).",
+    "perf_hooks.md:2439/2453 linearBuckets/logBuckets say 'map of bucket boundary values to counts'; behavior: keys are inclusive upper bounds (key k counts values in (k - step, k]; logBuckets first key holds all values <= firstBucket).",
+    "perf_hooks.md:2920 add(other) does not reject histograms with a different figures configuration (observed: silently accepted)."
+  ]
+}
