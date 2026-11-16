@@ -43,7 +43,7 @@ against the installed version before writing code.
 As a plugin (recommended: versioned, updatable, skills namespaced as `node-skills:*`):
 
 ```text
-/plugin marketplace add <path-or-git-url-of-this-repo>
+/plugin marketplace add jasnell/node-skills
 /plugin install node-skills@node-skills
 ```
 

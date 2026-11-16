@@ -6,6 +6,8 @@
   "author": {
     "name": "James M Snell"
   },
+  "homepage": "https://github.com/jasnell/node-skills",
+  "repository": "https://github.com/jasnell/node-skills",
   "license": "MIT",
   "keywords": [
     "nodejs",

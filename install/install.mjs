@@ -15,7 +15,7 @@
 // Claude Code or want the skills scoped to opencode.
 //
 // For Claude Code the plugin route is usually better (versioned, updatable):
-//   /plugin marketplace add <path-or-git-url-of-this-repo>
+//   /plugin marketplace add jasnell/node-skills
 //   /plugin install node-skills@node-skills
 //
 // --mode link (default) symlinks each skill directory to this checkout, so a
